@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Edit Note')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-4 py-md-5 flex-grow-1">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a th:href="@{/}">Notes</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Note</li>
+                </ol>
+            </nav>
+
+            <div class="card form-card">
+                <div class="card-body p-4 p-md-5">
+                    <h1 class="h4 fw-bold mb-1"><i class="bi bi-pencil-square text-primary me-2"></i>Edit note</h1>
+                    <p class="text-secondary small mb-4">
+                        Created <span th:text="${note.createdAt != null} ? ${#dates.format(note.createdAt, 'dd MMM yyyy, hh:mm a')} : '-'"></span>
+                        <span th:if="${note.edited}"> &middot; Last updated
+                            <span th:text="${#dates.format(note.updatedAt, 'dd MMM yyyy, hh:mm a')}"></span>
+                        </span>
+                    </p>
+
+                    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+                    <!-- Prefilled form: noteForm was filled from the existing note in the controller -->
+                    <form th:action="@{/notes/{id}(id=${note.id})}" th:object="${noteForm}" method="post"
+                          class="needs-validation" novalidate>
+                        <th:block th:replace="~{fragments/note-form :: fields}"></th:block>
+
+                        <div class="d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
+                            <a th:href="@{/}" class="btn btn-light px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check2-circle me-1"></i>Update Note
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

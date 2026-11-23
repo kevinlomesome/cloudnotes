@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+    Shared form fields for Add and Edit pages.
+    th:object="${noteForm}" (set on the <form> in the page) lets us use *{title} and *{description}.
+    th:errors shows the validation messages from NoteForm.
+-->
+<th:block th:fragment="fields">
+    <div class="mb-3">
+        <label for="title" class="form-label fw-medium">Title <span class="text-danger">*</span></label>
+        <input type="text" id="title" th:field="*{title}" class="form-control form-control-lg"
+               th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
+               placeholder="e.g. Grocery list" maxlength="100" required autofocus>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</div>
+        <div class="invalid-feedback" th:unless="${#fields.hasErrors('title')}">Title is required</div>
+        <div class="form-text text-end"><span class="char-count" data-for="title">0</span>/100</div>
+    </div>
+
+    <div class="mb-4">
+        <label for="description" class="form-label fw-medium">Description <span class="text-danger">*</span></label>
+        <textarea id="description" th:field="*{description}" class="form-control" rows="8"
+                  th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"
+                  placeholder="Write your note here..." maxlength="5000" required></textarea>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description error</div>
+        <div class="invalid-feedback" th:unless="${#fields.hasErrors('description')}">Description is required</div>
+        <div class="form-text text-end"><span class="char-count" data-for="description">0</span>/5000</div>
+    </div>
+</th:block>
+</body>
+</html>

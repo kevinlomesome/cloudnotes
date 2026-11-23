@@ -1,0 +1,12 @@
+# Render Blueprint (optional) - lets Render create the service from this file.
+# You can also create the Web Service manually in the dashboard (see README).
+services:
+  - type: web
+    name: cloudnotes
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: FIREBASE_CREDENTIALS
+        sync: false   # Render will ask you to paste the service account JSON

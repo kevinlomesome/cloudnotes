@@ -1,0 +1,21 @@
+# ---- SECRET: never push your Firebase key to GitHub ----
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
+
+# Build output
+target/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

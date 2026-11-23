@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Notes')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-4 py-md-5 flex-grow-1">
+
+    <!-- Page header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">My Notes</h1>
+            <p class="text-secondary mb-0">
+                <span th:text="${#lists.size(notes)}">0</span>
+                <span th:text="${#lists.size(notes) == 1} ? 'note' : 'notes'">notes</span>
+                <span th:if="${!#strings.isEmpty(search)}"> matching "<strong th:text="${search}">x</strong>"</span>
+                &middot; newest first
+            </p>
+        </div>
+        <a th:href="@{/notes/new}" class="btn btn-primary px-4 shadow-sm">
+            <i class="bi bi-plus-lg me-1"></i>Add Note
+        </a>
+    </div>
+
+    <!-- Search bar -->
+    <form th:action="@{/}" method="get" class="search-box mb-4" role="search">
+        <div class="input-group input-group-lg">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
+            <input type="search" name="search" th:value="${search}" class="form-control border-start-0 ps-0"
+                   placeholder="Search notes by title..." aria-label="Search notes by title">
+            <button class="btn btn-primary px-4" type="submit">Search</button>
+        </div>
+        <a th:if="${!#strings.isEmpty(search)}" th:href="@{/}" class="d-inline-block mt-2 small text-decoration-none">
+            <i class="bi bi-x-circle me-1"></i>Clear search
+        </a>
+    </form>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <!-- Empty state -->
+    <div th:if="${#lists.isEmpty(notes)}" class="empty-state text-center py-5 px-3">
+        <div class="empty-icon mx-auto mb-3"><i class="bi bi-journal-text"></i></div>
+        <th:block th:if="${#strings.isEmpty(search)}">
+            <h2 class="h5 fw-semibold">No notes yet</h2>
+            <p class="text-secondary mb-4">Create your first note and it will be saved in the cloud.</p>
+            <a th:href="@{/notes/new}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Create a note</a>
+        </th:block>
+        <th:block th:unless="${#strings.isEmpty(search)}">
+            <h2 class="h5 fw-semibold">No matching notes</h2>
+            <p class="text-secondary mb-4">No note title contains "<span th:text="${search}"></span>".</p>
+            <a th:href="@{/}" class="btn btn-outline-primary">Show all notes</a>
+        </th:block>
+    </div>
+
+    <!-- Notes grid -->
+    <div th:unless="${#lists.isEmpty(notes)}" class="row g-4">
+        <div class="col-12 col-sm-6 col-lg-4" th:each="note : ${notes}">
+            <article class="card note-card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="card-title h5 fw-semibold mb-2 text-break" th:text="${note.title}">Note title</h2>
+                    <p class="card-text text-secondary note-description flex-grow-1 text-break"
+                       th:text="${note.description}">Description</p>
+                    <div class="note-meta small text-secondary mt-3">
+                        <div>
+                            <i class="bi bi-calendar3 me-1"></i>
+                            <span th:text="${note.createdAt != null} ? ${#dates.format(note.createdAt, 'dd MMM yyyy, hh:mm a')} : '-'">date</span>
+                        </div>
+                        <div th:if="${note.edited}" class="mt-1">
+                            <i class="bi bi-pencil me-1"></i>Edited
+                            <span th:text="${#dates.format(note.updatedAt, 'dd MMM yyyy, hh:mm a')}">date</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pt-0 pb-3 px-3 d-flex gap-2">
+                    <a th:href="@{/notes/{id}/edit(id=${note.id})}" class="btn btn-sm btn-outline-primary flex-fill">
+                        <i class="bi bi-pencil-square me-1"></i>Edit
+                    </a>
+                    <!-- Opens the confirmation modal; app.js fills in the note title and form action -->
+                    <button type="button" class="btn btn-sm btn-outline-danger flex-fill"
+                            data-bs-toggle="modal" data-bs-target="#deleteModal"
+                            th:attr="data-note-title=${note.title},data-delete-url=@{/notes/{id}/delete(id=${note.id})}">
+                        <i class="bi bi-trash me-1"></i>Delete
+                    </button>
+                </div>
+            </article>
+        </div>
+    </div>
+</main>
+
+<!-- Delete confirmation dialog -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h2 class="modal-title h5 fw-semibold" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>Delete note?
+                </h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete "<strong id="deleteNoteTitle"></strong>"?
+                This cannot be undone.
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post" action="#">
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Error')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 flex-grow-1 d-flex align-items-center justify-content-center">
+    <div class="text-center error-box">
+        <div class="display-3 fw-bold text-primary mb-2" th:text="${status} ?: 'Oops'">404</div>
+        <h1 class="h4 fw-semibold mb-2" th:text="${errorTitle} ?: 'Something went wrong'">Error</h1>
+        <p class="text-secondary mb-4" th:text="${errorMessage} ?: 'An unexpected error occurred.'">Message</p>
+        <a th:href="@{/}" class="btn btn-primary px-4"><i class="bi bi-house me-1"></i>Back to notes</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

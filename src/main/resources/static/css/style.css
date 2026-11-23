@@ -1,0 +1,224 @@
+/* =========================================
+   CloudNotes - custom styles (on top of Bootstrap 5)
+   Palette: white, blue, gray
+   ========================================= */
+
+:root {
+    --cn-blue: #2563eb;
+    --cn-blue-dark: #1d4ed8;
+    --cn-blue-soft: #eff4ff;
+    --cn-gray-50: #f8fafc;
+    --cn-gray-100: #f1f5f9;
+    --cn-gray-200: #e2e8f0;
+    --cn-gray-500: #64748b;
+    --cn-gray-800: #1e293b;
+    --cn-radius: 14px;
+
+    /* Override Bootstrap's primary colour */
+    --bs-primary: var(--cn-blue);
+    --bs-primary-rgb: 37, 99, 235;
+    --bs-link-color: var(--cn-blue);
+    --bs-link-hover-color: var(--cn-blue-dark);
+    --bs-body-font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --bs-body-color: var(--cn-gray-800);
+    --bs-secondary-color: var(--cn-gray-500);
+}
+
+body {
+    background-color: var(--cn-gray-50);
+}
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+    --bs-btn-bg: var(--cn-blue);
+    --bs-btn-border-color: var(--cn-blue);
+    --bs-btn-hover-bg: var(--cn-blue-dark);
+    --bs-btn-hover-border-color: var(--cn-blue-dark);
+    --bs-btn-active-bg: var(--cn-blue-dark);
+    --bs-btn-active-border-color: var(--cn-blue-dark);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--cn-blue);
+    --bs-btn-border-color: #bfd2fb;
+    --bs-btn-hover-bg: var(--cn-blue);
+    --bs-btn-hover-border-color: var(--cn-blue);
+}
+
+.btn {
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.btn-light {
+    background: var(--cn-gray-100);
+    border-color: var(--cn-gray-200);
+}
+
+/* ---------- Navbar ---------- */
+.app-navbar {
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.brand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--cn-blue);
+    color: #fff;
+    font-size: 1rem;
+}
+
+.navbar .nav-link {
+    color: var(--cn-gray-500);
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover {
+    color: var(--cn-blue);
+}
+
+/* ---------- Search ---------- */
+.search-box .input-group-text,
+.search-box .form-control {
+    border-color: var(--cn-gray-200);
+}
+
+.search-box .form-control:focus {
+    box-shadow: none;
+    border-color: var(--cn-gray-200);
+}
+
+.search-box .input-group:focus-within {
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    border-radius: 12px;
+}
+
+.search-box .input-group > :first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.search-box .input-group > :last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* ---------- Note cards ---------- */
+.note-card {
+    border: 1px solid var(--cn-gray-200);
+    border-radius: var(--cn-radius);
+    background: #fff;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.note-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cn-blue), #60a5fa);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+
+.note-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px -12px rgba(15, 23, 42, 0.18);
+    border-color: #cfdcf7;
+}
+
+.note-card:hover::before {
+    opacity: 1;
+}
+
+/* Show max 5 lines of the description on the card */
+.note-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: pre-line;
+}
+
+.note-meta {
+    border-top: 1px dashed var(--cn-gray-200);
+    padding-top: 0.75rem;
+}
+
+/* ---------- Forms ---------- */
+.form-card {
+    border: 1px solid var(--cn-gray-200);
+    border-radius: var(--cn-radius);
+    box-shadow: 0 10px 30px -18px rgba(15, 23, 42, 0.2);
+}
+
+.form-control {
+    border-color: var(--cn-gray-200);
+    border-radius: 10px;
+}
+
+.form-control:focus {
+    border-color: #93b4f8;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+/* ---------- Empty state ---------- */
+.empty-state {
+    background: #fff;
+    border: 1px dashed #cbd5e1;
+    border-radius: var(--cn-radius);
+}
+
+.empty-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--cn-blue-soft);
+    color: var(--cn-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+/* ---------- Alerts ---------- */
+.alert {
+    border-radius: 12px;
+    border: 0;
+}
+
+/* ---------- Footer ---------- */
+.app-footer {
+    background: #fff;
+    border-top: 1px solid var(--cn-gray-200);
+}
+
+.error-box {
+    max-width: 460px;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 575.98px) {
+    .search-box .input-group-lg > .form-control,
+    .search-box .input-group-lg > .btn,
+    .search-box .input-group-lg > .input-group-text {
+        font-size: 1rem;
+        padding: 0.6rem 0.8rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .note-card,
+    .note-card::before {
+        transition: none;
+    }
+    .note-card:hover {
+        transform: none;
+    }
+}

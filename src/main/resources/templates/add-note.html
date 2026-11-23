@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Add Note')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-4 py-md-5 flex-grow-1">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small">
+                    <li class="breadcrumb-item"><a th:href="@{/}">Notes</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Note</li>
+                </ol>
+            </nav>
+
+            <div class="card form-card">
+                <div class="card-body p-4 p-md-5">
+                    <h1 class="h4 fw-bold mb-1"><i class="bi bi-plus-circle text-primary me-2"></i>Add a new note</h1>
+                    <p class="text-secondary mb-4">Fields marked <span class="text-danger">*</span> are required.</p>
+
+                    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+                    <!-- novalidate: we use Bootstrap's styled validation (app.js) + server validation -->
+                    <form th:action="@{/notes}" th:object="${noteForm}" method="post"
+                          class="needs-validation" novalidate>
+                        <th:block th:replace="~{fragments/note-form :: fields}"></th:block>
+
+                        <div class="d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
+                            <a th:href="@{/}" class="btn btn-light px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-save me-1"></i>Save Note
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
