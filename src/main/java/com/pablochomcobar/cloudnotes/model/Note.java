@@ -16,6 +16,7 @@ import java.util.Date;
 public class Note {
 
     private String id;           // Firestore document ID
+    private String userId;       // Firebase User UID (for privacy)
     private String title;
     private String description;
     private Date createdAt;
@@ -28,6 +29,14 @@ public class Note {
     public Note(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getId() {

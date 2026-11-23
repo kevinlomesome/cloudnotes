@@ -42,7 +42,25 @@ public class NoteRepository {
         return firestore.collection(COLLECTION);
     }
 
-    /** Returns all notes, newest first (sorted by Firestore itself). */
+    /** Returns all notes for a specific user, newest first. */
+    public List<Note> findAllByUserIdNewestFirst(String userId) {
+        ApiFuture<com.google.cloud.firestore.QuerySnapshot> future =
+                notes().whereEqualTo("userId", userId)
+                       .get();
+
+        List<Note> result = new ArrayList<>();
+        for (QueryDocumentSnapshot doc : await(future, "load notes").getDocuments()) {
+            result.add(toNote(doc));
+        }
+        // Sort newest first in memory to avoid requiring a composite index in Firestore
+        result.sort((a, b) -> {
+            if (a.getCreatedAt() == null || b.getCreatedAt() == null) return 0;
+            return b.getCreatedAt().compareTo(a.getCreatedAt());
+        });
+        return result;
+    }
+
+    /** Returns all notes, newest first (legacy/fallback). */
     public List<Note> findAllNewestFirst() {
         ApiFuture<com.google.cloud.firestore.QuerySnapshot> future =
                 notes().orderBy("createdAt", Query.Direction.DESCENDING).get();

@@ -8,7 +8,7 @@
 <main class="container py-4 py-md-5 flex-grow-1">
 
     <!-- Page header -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div th:if="${isLoggedIn}" class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
             <h1 class="h3 fw-bold mb-1">My Notes</h1>
             <p class="text-secondary mb-0">
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Search bar -->
-    <form th:action="@{/}" method="get" class="search-box mb-4" role="search">
+    <form th:if="${isLoggedIn}" th:action="@{/}" method="get" class="search-box mb-4" role="search">
         <div class="input-group input-group-lg">
             <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
             <input type="search" name="search" th:value="${search}" class="form-control border-start-0 ps-0"
@@ -38,8 +38,22 @@
 
     <div th:replace="~{fragments/layout :: alerts}"></div>
 
-    <!-- Empty state -->
-    <div th:if="${#lists.isEmpty(notes)}" class="empty-state text-center py-5 px-3">
+    <!-- Signed-out Call to Action -->
+    <div th:unless="${isLoggedIn}" class="text-center py-5 px-3 bg-white rounded-3 shadow-sm border mb-4">
+        <div class="empty-icon mx-auto mb-3 text-primary" style="font-size: 3rem;"><i class="bi bi-shield-lock-fill"></i></div>
+        <h2 class="h4 fw-bold">Keep Your Notes Private</h2>
+        <p class="text-secondary mb-4 mx-auto" style="max-width: 480px;">
+            Sign in with your Google account to create, manage, and access your private notes securely from any device.
+        </p>
+        <button class="btn btn-primary px-4 py-2 shadow-sm d-inline-flex align-items-center gap-2"
+                type="button" onclick="firebaseGoogleLogin()">
+            <i class="bi bi-google"></i>
+            <span>Sign in with Google</span>
+        </button>
+    </div>
+
+    <!-- Empty state (When logged in but no notes) -->
+    <div th:if="${isLoggedIn && #lists.isEmpty(notes)}" class="empty-state text-center py-5 px-3">
         <div class="empty-icon mx-auto mb-3"><i class="bi bi-journal-text"></i></div>
         <th:block th:if="${#strings.isEmpty(search)}">
             <h2 class="h5 fw-semibold">No notes yet</h2>

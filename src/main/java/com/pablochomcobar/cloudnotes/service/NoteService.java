@@ -24,17 +24,38 @@ public class NoteService {
         this.noteRepository = noteRepository;
     }
 
-    /** All notes, newest first. */
+    /** All notes for a user, newest first. */
+    public List<Note> getAllNotes(String userId) {
+        if (userId == null || userId.isBlank()) {
+            return List.of();
+        }
+        return noteRepository.findAllByUserIdNewestFirst(userId);
+    }
+
+    /** All notes, newest first (fallback). */
     public List<Note> getAllNotes() {
         return noteRepository.findAllNewestFirst();
     }
 
     /**
-     * Searches notes by title (case-insensitive, "contains" match).
-     *
-     * Firestore can't do "contains" text searches, so we load the notes (already
-     * sorted newest first) and filter them in Java. Perfect for a personal notes app.
+     * Searches a specific user's notes by title (case-insensitive, "contains" match).
      */
+    public List<Note> searchByTitle(String userId, String keyword) {
+        if (userId == null || userId.isBlank()) {
+            return List.of();
+        }
+        List<Note> userNotes = getAllNotes(userId);
+        if (keyword == null || keyword.isBlank()) {
+            return userNotes;
+        }
+        String search = keyword.trim().toLowerCase(Locale.ROOT);
+        return userNotes.stream()
+                .filter(note -> note.getTitle() != null
+                        && note.getTitle().toLowerCase(Locale.ROOT).contains(search))
+                .toList();
+    }
+
+    /** Searches notes by title without user scoping. */
     public List<Note> searchByTitle(String keyword) {
         if (keyword == null || keyword.isBlank()) {
             return getAllNotes();
@@ -50,6 +71,16 @@ public class NoteService {
     public Note getNoteById(String id) {
         return noteRepository.findById(id)
                 .orElseThrow(() -> new NoteNotFoundException(id));
+    }
+
+    /** Creates a note for a specific user and sets both timestamps to "now". */
+    public Note createNote(String userId, NoteForm form) {
+        Note note = new Note(form.getTitle().trim(), form.getDescription().trim());
+        note.setUserId(userId);
+        Date now = new Date();
+        note.setCreatedAt(now);
+        note.setUpdatedAt(now);
+        return noteRepository.save(note);
     }
 
     /** Creates a note and sets both timestamps to "now". */
